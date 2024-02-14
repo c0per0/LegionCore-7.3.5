@@ -165,7 +165,10 @@ uint32 LootStore::LoadLootTable()
         storeitem.ClassificationMask = ClassificationMask;
 
         if (!storeitem.IsValid(*this, entry))            // Validity checks
+        {
+            delete storeitem;
             continue;
+        }
 
         // Looking for the template of the entry
                                                         // often entries are put together
@@ -1892,9 +1895,11 @@ bool LootTemplate::LootGroup::HasQuestDrop() const
     for (LootStoreItemList::const_iterator i=ExplicitlyChanced.begin(); i != ExplicitlyChanced.end(); ++i)
         if (i->needs_quest)
             return true;
+
     for (LootStoreItemList::const_iterator i=EqualChanced.begin(); i != EqualChanced.end(); ++i)
         if (i->needs_quest)
             return true;
+
     return false;
 }
 
@@ -1904,9 +1909,11 @@ bool LootTemplate::LootGroup::HasQuestDropForPlayer(Player const* player) const
     for (LootStoreItemList::const_iterator i = ExplicitlyChanced.begin(); i != ExplicitlyChanced.end(); ++i)
         if (player->HasQuestForItem(i->itemid))
             return true;
+
     for (LootStoreItemList::const_iterator i = EqualChanced.begin(); i != EqualChanced.end(); ++i)
         if (player->HasQuestForItem(i->itemid))
             return true;
+
     return false;
 }
 
@@ -3272,6 +3279,10 @@ bool LootTemplate::HasQuestDropForPlayer(LootTemplateMap const& store, Player co
     {
         if (groupId > Groups.size())
             return false;                                   // Error message already printed at loading stage
+
+        if (!Groups[groupId - 1])
+            return false;
+
         return Groups[groupId-1].HasQuestDropForPlayer(player);
     }
 
