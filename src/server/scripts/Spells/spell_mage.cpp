@@ -471,13 +471,13 @@ class spell_mage_polymorph_cast_visual : public SpellScriptLoader
         {
             PrepareSpellScript(spell_mage_polymorph_cast_visual_SpellScript);
 
-            static const uint32 PolymorhForms[6];
+            static const uint32 PolymorphForms[6];
 
             bool Validate(SpellInfo const* /*SpellInfo*/) override
             {
                 // check if spell ids exist in dbc
                 for (uint32 i = 0; i < 6; i++)
-                    if (!sSpellMgr->GetSpellInfo(PolymorhForms[i]))
+                    if (!sSpellMgr->GetSpellInfo(PolymorphForms[i]))
                         return false;
                 return true;
             }
@@ -486,7 +486,7 @@ class spell_mage_polymorph_cast_visual : public SpellScriptLoader
             {
                 if (Unit* target = GetCaster()->FindNearestCreature(NPC_AUROSALIA, 30.0f))
                     if (target->GetTypeId() == TYPEID_UNIT)
-                        target->CastSpell(target, PolymorhForms[urand(0, 5)], true);
+                        target->CastSpell(target, PolymorphForms[urand(0, 5)], true);
             }
 
             void Register() override
@@ -502,7 +502,7 @@ class spell_mage_polymorph_cast_visual : public SpellScriptLoader
         }
 };
 
-const uint32 spell_mage_polymorph_cast_visual::spell_mage_polymorph_cast_visual_SpellScript::PolymorhForms[6] =
+const uint32 spell_mage_polymorph_cast_visual::spell_mage_polymorph_cast_visual_SpellScript::PolymorphForms[6] =
 {
     SPELL_MAGE_SQUIRREL_FORM,
     SPELL_MAGE_GIRAFFE_FORM,
@@ -703,7 +703,7 @@ class spell_mage_icicle : public AuraScript
     }
 };
 
-//Illusion glyph - 131784
+// Illusion glyph - 131784
 class spell_mage_illusion : public SpellScriptLoader
 {
     public:
@@ -1581,7 +1581,7 @@ class spell_mage_belovirs_final_stand : public SpellScriptLoader
         }
 };
 
-// 208141 - Ray of Frost
+// Ray of Frost - 208141
 class spell_mage_ray_of_frost : public SpellScriptLoader
 {
     public:
@@ -1847,7 +1847,7 @@ class spell_mage_arcane_missiles : public SpellScriptLoader
         }
 };
 
-// 238126
+// 238126 - Time and Space
 class spell_mage_time_and_space : public AuraScript
 {
     PrepareAuraScript(spell_mage_time_and_space);

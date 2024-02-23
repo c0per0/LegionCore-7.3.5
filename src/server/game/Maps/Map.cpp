@@ -3027,7 +3027,7 @@ float Map::GetWaterOrGroundLevel(std::set<uint32> const& phases, float x, float 
     return VMAP_INVALID_HEIGHT_VALUE;
 }
 
-float Map::GetGridMapHeigh(float x, float y) const
+float Map::GetGridMapHeight(float x, float y) const
 {
     if (GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
         return gmap->getHeight(x, y);

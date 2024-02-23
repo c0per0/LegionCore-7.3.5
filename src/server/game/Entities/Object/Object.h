@@ -166,6 +166,8 @@ private:
     std::vector<uint32> const& _data;
 };
 
+float const DEFAULT_COLLISION_HEIGHT = 2.03128f; // Most common value in dbc
+
 class Object
 {
     public:
@@ -475,7 +477,7 @@ class WorldObject : public Object, public WorldLocation
 
         float GetObjectSize() const;
         void UpdateGroundPositionZ(float x, float y, float &z) const;
-        void UpdateAllowedPositionZ(float x, float y, float &z) const;
+        void UpdateAllowedPositionZ(float x, float y, float &z, float* groundZ = nullptr) const;
         virtual bool IsInWater() const { return false; }
         virtual bool IsUnderWater() const { return false; }
 
@@ -693,6 +695,11 @@ class WorldObject : public Object, public WorldLocation
         virtual float GetStationaryY() const { return GetPositionY(); }
         virtual float GetStationaryZ() const { return GetPositionZ(); }
         virtual float GetStationaryO() const { return GetOrientation(); }
+
+        float GetMinHeightInWater() const;
+
+        virtual float GetCollisionHeight() const { return 0.0f; }
+        virtual float GetCollisionWidth() const { return GetObjectSize(); }
 
         //template<class NOTIFIER> void VisitNearbyObject(const float &radius, NOTIFIER &notifier) const;
         template<class NOTIFIER>

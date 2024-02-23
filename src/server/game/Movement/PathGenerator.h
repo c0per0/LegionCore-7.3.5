@@ -24,7 +24,7 @@
 #include "DetourNavMeshQuery.h"
 #include "MoveSplineInitArgs.h"
 
-class Unit;
+class WorldObject;
 
 // 74*4.0f=296y  number_of_points*interval = max_path_len
 // this is way more than actual evade range
@@ -41,19 +41,22 @@ class Unit;
 
 enum PathType
 {
-    PATHFIND_BLANK          = 0x00,   // path not built yet
-    PATHFIND_NORMAL         = 0x01,   // normal path
-    PATHFIND_SHORTCUT       = 0x02,   // travel through obstacles, terrain, air, etc (old behavior)
-    PATHFIND_INCOMPLETE     = 0x04,   // we have partial path to follow - getting closer to target
-    PATHFIND_NOPATH         = 0x08,   // no valid path at all or error in generating one
-    PATHFIND_NOT_USING_PATH = 0x10,   // used when we are either flying/swiming or on map w/o mmaps
-    PATHFIND_SHORT          = 0x20,   // path is longer or equal to its limited path length
+    PATHFIND_BLANK             = 0x00,   // path not built yet
+    PATHFIND_NORMAL            = 0x01,   // normal path
+    PATHFIND_SHORTCUT          = 0x02,   // travel through obstacles, terrain, air, etc (old behavior)
+    PATHFIND_INCOMPLETE        = 0x04,   // we have partial path to follow - getting closer to target
+    PATHFIND_NOPATH            = 0x08,   // no valid path at all or error in generating one
+    PATHFIND_NOT_USING_PATH    = 0x10,   // used when we are either flying/swiming or on map w/o mmaps
+    PATHFIND_SHORT             = 0x20,   // path is longer or equal to its limited path length
+    PATHFIND_FARFROMPOLY_START = 0x40,   // start position is far from the mmap poligon
+    PATHFIND_FARFROMPOLY_END   = 0x80,   // end positions is far from the mmap poligon
+    PATHFIND_FARFROMPOLY       = PATHFIND_FARFROMPOLY_START | PATHFIND_FARFROMPOLY_END, // start or end positions are far from the mmap poligon
 };
 
 class PathGenerator
 {
     public:
-        explicit PathGenerator(Unit const* owner);
+        explicit PathGenerator(WorldObject const* owner);
         ~PathGenerator();
 
         // Calculate the path from owner to given destination
@@ -61,11 +64,12 @@ class PathGenerator
         void InitPath();
         bool CalculatePath(float destX, float destY, float destZ, bool forceDest = false, bool straightLine = false, bool stopOnlyOnEndPos = false);
         bool CalculateShortcutPath(float destX, float destY, float destZ);
-        bool IsInvalidDestinationZ(Unit const* target) const;
+        bool IsInvalidDestinationZ(WorldObject const* target) const;
 
         // option setters - use optional
         void SetUseStraightPath(bool useStraightPath);
         void SetPathLengthLimit(float distance);
+        void SetUseRaycast(bool useRaycast) { _useRaycast = useRaycast; }
 
         // result getters
         G3D::Vector3 const& GetStartPosition() const;
@@ -100,7 +104,7 @@ class PathGenerator
         bool _forceDestination; // when set, we will always arrive at given point
         bool _stopOnlyOnEndPos; // check path for TARGET_DEST_DEST
         uint32 _pointPathLimit; // limit point path size; min(this, MAX_POINT_PATH_LENGTH)
-        bool _straightLine;     // use raycast if true for a straight line path
+        bool _useRaycast;     // use raycast if true for a straight line path
 
         G3D::Vector3 _startPosition;        // {x, y, z} of current location
         G3D::Vector3 _endPosition;          // {x, y, z} of the destination
@@ -110,7 +114,7 @@ class PathGenerator
         GameObject* _go;
         bool _enableShort;
 
-        Unit const* const _sourceUnit;          // the unit that is moving
+        WorldObject const* const _source;          // the object that is moving
         dtNavMesh const* _navMesh;              // the nav mesh
         dtNavMeshQuery const* _navMeshQuery;    // the nav mesh query used to find the path
 

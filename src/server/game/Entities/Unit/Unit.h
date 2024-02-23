@@ -2288,6 +2288,11 @@ class Unit : public WorldObject
         bool IsFlying() const   { return m_movementInfo.HasMovementFlag(MOVEMENTFLAG_FLYING | MOVEMENTFLAG_DISABLE_GRAVITY); }
         void SetTimeForSpline(uint32 time) { m_timeForSpline = time; }
         uint32 GetTimeForSpline() { return m_timeForSpline; }
+        
+        float GetHoverHeight() const
+        {
+            return HasUnitMovementFlag(MOVEMENTFLAG_HOVER) ? GetFloatValue(UNIT_FIELD_HOVER_HEIGHT) : 0.0f;
+        }
 
         void RewardRage(float baseRage, bool attacker);
 
@@ -2427,6 +2432,7 @@ class Unit : public WorldObject
 
         void DestroyForPlayer(Player* target) const override;
 
+        float GetCollisionHeight() const override;
         uint32 GetVirtualItemId(uint32 slot) const;
         uint16 GetVirtualItemAppearanceMod(uint32 slot) const;
         void SetVirtualItem(uint32 slot, uint32 itemID, uint16 appearanceModID = 0, uint16 itemVisual = 0);

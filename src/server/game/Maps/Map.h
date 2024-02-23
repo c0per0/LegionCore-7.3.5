@@ -352,7 +352,7 @@ class Map
         float GetHeight(float x, float y, float z, bool checkVMap = true, float maxSearchDist = DEFAULT_HEIGHT_SEARCH) const;
         float GetMinHeight(Position pos) const;
         float GetVmapHeight(float x, float y, float z) const;
-        float GetGridMapHeigh(float x, float y) const;
+        float GetGridMapHeight(float x, float y) const;
 
         ZLiquidStatus getLiquidStatus(float x, float y, float z, uint8 ReqLiquidType, LiquidData* data = nullptr) const;
         
