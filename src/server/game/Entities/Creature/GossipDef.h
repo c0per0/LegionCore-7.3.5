@@ -75,7 +75,7 @@ enum GossipOptionNPC
     GOSSIP_NPC_BATTLE              = 9,                    // two crossed swords
     GOSSIP_NPC_DOT                 = 10,                   // yellow dot/point
     GOSSIP_NPC_CHAT_11             = 11,                   // white chat bubble
-    GOSSIP_NPC_CHAT_12             = 12,                   // white chat bubble
+    GOSSIP_NPC_STABLE_MASTER       = 12,                   // white chat bubble
     GOSSIP_NPC_CHAT_13             = 13,                   // white chat bubble
     GOSSIP_NPC_UNK_14              = 14,                   // INVALID - DO NOT USE
     GOSSIP_NPC_UNK_15              = 15,                   // INVALID - DO NOT USE
