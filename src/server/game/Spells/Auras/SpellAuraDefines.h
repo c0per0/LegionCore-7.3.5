@@ -350,7 +350,7 @@ enum AuraType
     SPELL_AURA_PREVENT_DURABILITY_LOSS                      = 289,
     SPELL_AURA_MOD_CRIT_PCT                                 = 290,
     SPELL_AURA_MOD_XP_QUEST_PCT                             = 291,
-    SPELL_AURA_292                                          = 292,
+    SPELL_AURA_OPEN_STABLE                                  = 292,
     SPELL_AURA_OVERRIDE_SPELLS                              = 293,
     SPELL_AURA_PREVENT_REGENERATE_POWER                     = 294,
     SPELL_AURA_295                                          = 295, // unused

@@ -28,6 +28,7 @@
 #include "Item.h"
 #include "ItemTemplate.h"
 #include "MapReference.h"
+#include "PetDefines.h"
 #include "Object.h"
 #include "Packets/VehiclePackets.h"
 #include "Pet.h"
@@ -1617,9 +1618,18 @@ class Player : public Unit, public GridObject<Player>
         time_t GetTimeInnEnter() const { return time_inn_enter; }
         void UpdateInnerTime (time_t time) { time_inn_enter = time; }
 
+        PetStable* GetPetStable() { return m_petStable.get(); }
+        PetStable& GetOrInitPetStable();
+        PetStable const* GetPetStable() const { return m_petStable.get(); }
+        void AddPetToUpdateFields(PetStable::PetInfo const& pet, PetSaveMode slot, PetStableFlags flags);
+        void SetPetSlot(uint32 petNumber, PetSaveMode dstPetSlot);
+        ObjectGuid GetStableMaster() const;
+        void SetStableMaster(ObjectGuid stableMaster);
+
         Pet* GetPet() const;
         Pet* SummonPet(uint32 entry, float x, float y, float z, float ang, PetType petType, uint32 despwtime, uint32 spellId = 0);
         void RemovePet(Pet* pet, bool isDelete = false);
+        void SendTameFailure(PetTameResult result);
 
         PhaseMgr& GetPhaseMgr() { return phaseMgr; }
 
@@ -3362,6 +3372,7 @@ class Player : public Unit, public GridObject<Player>
         void _LoadBGData(PreparedQueryResult result);
         void _LoadGlyphs(PreparedQueryResult result);
         void _LoadTalents(PreparedQueryResult result, PreparedQueryResult result2);
+        void _LoadPetStable(uint32 summonedPetNumber, PreparedQueryResult result);
         void _LoadCurrency(PreparedQueryResult result);
         void _LoadCUFProfiles(PreparedQueryResult result);
         void _LoadHonor(PreparedQueryResult result, PreparedQueryResult result2);
@@ -3700,6 +3711,8 @@ class Player : public Unit, public GridObject<Player>
         bool m_bCanDelayTeleport;
         bool m_bHasDelayedTeleport;
         bool m_bHasglobalTeleport;
+
+        std::unique_ptr<PetStable> m_petStable;
 
         // Temporary removed pet cache
         uint32 m_temporaryUnsummonedPetNumber;
