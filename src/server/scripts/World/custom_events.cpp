@@ -3913,8 +3913,8 @@ public:
         player->ADD_GOSSIP_ITEM_DB(DB_MENU_ID, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
         player->ADD_GOSSIP_ITEM_DB(DB_MENU_ID, 3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-        //player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_INTERACT_1, sObjectMgr->GetTrinityString(600023, localeConstant), GOSSIP_SENDER_MAIN, 3, "", 0, true);
-        //player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_INTERACT_1, sObjectMgr->GetTrinityString(600024, localeConstant), GOSSIP_SENDER_MAIN, 4, "", 1, true);
+        //player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_NPC_INTERACT_1, sObjectMgr->GetTrinityString(600023, localeConstant), GOSSIP_SENDER_MAIN, 3, "", 0, true);
+        //player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_NPC_INTERACT_1, sObjectMgr->GetTrinityString(600024, localeConstant), GOSSIP_SENDER_MAIN, 4, "", 1, true);
 
         player->SEND_GOSSIP_MENU(DB_GOSSIP, creature->GetGUID());
         return true;
@@ -4008,7 +4008,7 @@ public:
         if (player->GetQuestStatus(60023) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(60024) == QUEST_STATUS_INCOMPLETE)
             player->ADD_GOSSIP_ITEM_DB(542140, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-        //player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_INTERACT_1, sObjectMgr->GetTrinityString(600023, localeConstant), GOSSIP_SENDER_MAIN, 3, "", 0, true);
+        //player->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_NPC_INTERACT_1, sObjectMgr->GetTrinityString(600023, localeConstant), GOSSIP_SENDER_MAIN, 3, "", 0, true);
         player->SEND_GOSSIP_MENU(300001, creature->GetGUID());
         return true;
     }

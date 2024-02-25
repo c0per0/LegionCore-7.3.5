@@ -61,35 +61,35 @@ enum Gossip_Option_Type
     GOSSIP_OPTION_TYPE_MAX
 };
 
-enum GossipOptionIcon
+enum GossipOptionNPC
 {
-    GOSSIP_ICON_CHAT                = 0,                    // white chat bubble
-    GOSSIP_ICON_VENDOR              = 1,                    // brown bag
-    GOSSIP_ICON_TAXI                = 2,                    // flightmarker (paperplane)
-    GOSSIP_ICON_TRAINER             = 3,                    // brown book (trainer)
-    GOSSIP_ICON_INTERACT_1          = 4,                    // golden interaction wheel
-    GOSSIP_ICON_INTERACT_2          = 5,                    // golden interaction wheel
-    GOSSIP_ICON_MONEY_BAG           = 6,                    // brown bag (with gold coin in lower corner)
-    GOSSIP_ICON_TALK                = 7,                    // white chat bubble (with "..." inside)
-    GOSSIP_ICON_TABARD              = 8,                    // white tabard
-    GOSSIP_ICON_BATTLE              = 9,                    // two crossed swords
-    GOSSIP_ICON_DOT                 = 10,                   // yellow dot/point
-    GOSSIP_ICON_CHAT_11             = 11,                   // white chat bubble
-    GOSSIP_ICON_CHAT_12             = 12,                   // white chat bubble
-    GOSSIP_ICON_CHAT_13             = 13,                   // white chat bubble
-    GOSSIP_ICON_UNK_14              = 14,                   // INVALID - DO NOT USE
-    GOSSIP_ICON_UNK_15              = 15,                   // INVALID - DO NOT USE
-    GOSSIP_ICON_CHAT_16             = 16,                   // white chat bubble
-    GOSSIP_ICON_CHAT_17             = 17,                   // white chat bubble
-    GOSSIP_ICON_CHAT_18             = 18,                   // white chat bubble
-    GOSSIP_ICON_CHAT_19             = 19,                   // white chat bubble
-    GOSSIP_ICON_CHAT_20             = 20,                   // white chat bubble
-    GOSSIP_ICON_SHIPMENT            = 28,                   // auto-click?
-    GOSSIP_ICON_TRADESKILL          = 29,                   
-    GOSSIP_ICON_ADVENTURE_MAP       = 31,
-    GOSSIP_ICON_CLASS_HALL_UPGRADE  = 32,                   //UNIT_NPC_FLAG2_CLASS_HALL_UPGRADE
-    GOSSIP_ICON_TRANSMOGRIFIER      = 34,                   // transmogrifier
-    GOSSIP_ICON_MAX
+    GOSSIP_NPC_CHAT                = 0,                    // white chat bubble
+    GOSSIP_NPC_VENDOR              = 1,                    // brown bag
+    GOSSIP_NPC_TAXI                = 2,                    // flightmarker (paperplane)
+    GOSSIP_NPC_TRAINER             = 3,                    // brown book (trainer)
+    GOSSIP_NPC_INTERACT_1          = 4,                    // golden interaction wheel
+    GOSSIP_NPC_INTERACT_2          = 5,                    // golden interaction wheel
+    GOSSIP_NPC_MONEY_BAG           = 6,                    // brown bag (with gold coin in lower corner)
+    GOSSIP_NPC_TALK                = 7,                    // white chat bubble (with "..." inside)
+    GOSSIP_NPC_TABARD              = 8,                    // white tabard
+    GOSSIP_NPC_BATTLE              = 9,                    // two crossed swords
+    GOSSIP_NPC_DOT                 = 10,                   // yellow dot/point
+    GOSSIP_NPC_CHAT_11             = 11,                   // white chat bubble
+    GOSSIP_NPC_CHAT_12             = 12,                   // white chat bubble
+    GOSSIP_NPC_CHAT_13             = 13,                   // white chat bubble
+    GOSSIP_NPC_UNK_14              = 14,                   // INVALID - DO NOT USE
+    GOSSIP_NPC_UNK_15              = 15,                   // INVALID - DO NOT USE
+    GOSSIP_NPC_CHAT_16             = 16,                   // white chat bubble
+    GOSSIP_NPC_CHAT_17             = 17,                   // white chat bubble
+    GOSSIP_NPC_CHAT_18             = 18,                   // white chat bubble
+    GOSSIP_NPC_CHAT_19             = 19,                   // white chat bubble
+    GOSSIP_NPC_CHAT_20             = 20,                   // white chat bubble
+    GOSSIP_NPC_SHIPMENT            = 28,                   // auto-click?
+    GOSSIP_NPC_TRADESKILL          = 29,                   
+    GOSSIP_NPC_ADVENTURE_MAP       = 31,
+    GOSSIP_NPC_CLASS_HALL_UPGRADE  = 32,                   //UNIT_NPC_FLAG2_CLASS_HALL_UPGRADE
+    GOSSIP_NPC_TRANSMOGRIFIER      = 34,                   // transmogrifier
+    GOSSIP_NPC_MAX
 };
 
 //POI icons. Many more exist, list not complete.

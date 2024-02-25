@@ -651,7 +651,7 @@ class npc_halfus_dragon : public CreatureScript
             if (creature->HasAura(SPELL_UNRESPONSIVE_DRAKE))
                 return false;
             char const* _message = "Release drake!";
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,_message,GOSSIP_SENDER_MAIN ,GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_NPC_CHAT,_message,GOSSIP_SENDER_MAIN ,GOSSIP_ACTION_INFO_DEF+1);
             pPlayer->SEND_GOSSIP_MENU(68,creature->GetGUID());
 
             return true;

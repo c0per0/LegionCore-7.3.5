@@ -126,21 +126,21 @@ void GossipDataStoreMgr::LoadGossipMenuItems()
         gMenuItem.BoxBroadcastTextID = fields[12].GetUInt32();
         gMenuItem.BoxCurrency = fields[14].GetUInt32();
 
-        if (gMenuItem.OptionNPC >= GOSSIP_ICON_MAX)
+        if (gMenuItem.OptionNPC >= GOSSIP_NPC_MAX)
         {
-            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has unknown icon id %u. Replacing with GOSSIP_ICON_CHAT", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
-            gMenuItem.OptionNPC = GOSSIP_ICON_CHAT;
+            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has unknown icon id %u. Replacing with GOSSIP_NPC_CHAT", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
+            gMenuItem.OptionNPC = GOSSIP_NPC_CHAT;
         }
 
-        if (gMenuItem.OptionNPC == GOSSIP_ICON_SHIPMENT && gMenuItem.OptionType != GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT)
+        if (gMenuItem.OptionNPC == GOSSIP_NPC_SHIPMENT && gMenuItem.OptionType != GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT)
         {
-            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_ICON_SHIPMENT, but handler %i != GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
+            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_NPC_SHIPMENT, but handler %i != GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
             gMenuItem.OptionType = GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT;
         }
 
-        if (gMenuItem.OptionNPC == GOSSIP_ICON_CLASS_HALL_UPGRADE && gMenuItem.OptionType != GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE)
+        if (gMenuItem.OptionNPC == GOSSIP_NPC_CLASS_HALL_UPGRADE && gMenuItem.OptionType != GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE)
         {
-            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_ICON_CLASS_HALL_UPGRADE, but handler %i != GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
+            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_NPC_CLASS_HALL_UPGRADE, but handler %i != GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
             gMenuItem.OptionType = GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE;
         }
 
