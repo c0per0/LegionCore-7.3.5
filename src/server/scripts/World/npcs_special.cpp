@@ -2259,7 +2259,7 @@ class npc_rogue_trainer : public CreatureScript
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
 
             if (creature->isCanTrainingAndResetTalentsOf(player))
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_HELLO_ROGUE1, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_UNLEARNTALENTS);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_HELLO_ROGUE1, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_TYPE_UNLEARNTALENTS);
 
             if (player->getClass() == CLASS_ROGUE && player->getLevel() >= 24 && !player->HasItemCount(17126) && !player->GetQuestRewardStatus(6681))
             {
@@ -2283,7 +2283,7 @@ class npc_rogue_trainer : public CreatureScript
                 case GOSSIP_ACTION_TRAIN:
                     player->GetSession()->SendTrainerList(creature->GetGUID());
                     break;
-                case GOSSIP_OPTION_UNLEARNTALENTS:
+                case GOSSIP_OPTION_TYPE_UNLEARNTALENTS:
                     player->CLOSE_GOSSIP_MENU();
                     player->SendTalentWipeConfirm(creature->GetGUID(), RESPEC_TYPE_TALENTS);
                     break;

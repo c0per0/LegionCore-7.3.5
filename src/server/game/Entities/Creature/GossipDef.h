@@ -28,37 +28,37 @@ class WorldSession;
 #define GOSSIP_MAX_MENU_ITEMS 64                            // client supported items unknown, but provided number must be enough
 #define DEFAULT_GOSSIP_MESSAGE              0xffffff
 
-enum Gossip_Option
+enum Gossip_Option_Type
 {
-    GOSSIP_OPTION_NONE                  = 0,                    //UNIT_NPC_FLAG_NONE                (0)
-    GOSSIP_OPTION_GOSSIP                = 1,                    //UNIT_NPC_FLAG_GOSSIP              (1)
-    GOSSIP_OPTION_QUESTGIVER            = 2,                    //UNIT_NPC_FLAG_QUESTGIVER          (2)
-    GOSSIP_OPTION_VENDOR                = 3,                    //UNIT_NPC_FLAG_VENDOR              (128)
-    GOSSIP_OPTION_TAXIVENDOR            = 4,                    //UNIT_NPC_FLAG_TAXIVENDOR          (8192)
-    GOSSIP_OPTION_TRAINER               = 5,                    //UNIT_NPC_FLAG_TRAINER             (16)
-    GOSSIP_OPTION_SPIRITHEALER          = 6,                    //UNIT_NPC_FLAG_SPIRITHEALER        (16384)
-    GOSSIP_OPTION_SPIRITGUIDE           = 7,                    //UNIT_NPC_FLAG_SPIRITGUIDE         (32768)
-    GOSSIP_OPTION_INNKEEPER             = 8,                    //UNIT_NPC_FLAG_INNKEEPER           (65536)
-    GOSSIP_OPTION_BANKER                = 9,                    //UNIT_NPC_FLAG_BANKER              (131072)
-    GOSSIP_OPTION_PETITIONER            = 10,                   //UNIT_NPC_FLAG_PETITIONER          (262144)
-    GOSSIP_OPTION_TABARDDESIGNER        = 11,                   //UNIT_NPC_FLAG_TABARDDESIGNER      (524288)
-    GOSSIP_OPTION_BATTLEFIELD           = 12,                   //UNIT_NPC_FLAG_BATTLEFIELDPERSON   (1048576)
-    GOSSIP_OPTION_AUCTIONEER            = 13,                   //UNIT_NPC_FLAG_AUCTIONEER          (2097152)
-    GOSSIP_OPTION_STABLEPET             = 14,                   //UNIT_NPC_FLAG_STABLE              (4194304)
-    GOSSIP_OPTION_ARMORER               = 15,                   //UNIT_NPC_FLAG_ARMORER             (4096)
-    GOSSIP_OPTION_UNLEARNTALENTS        = 16,                   //UNIT_NPC_FLAG_TRAINER             (16) (bonus option for GOSSIP_OPTION_TRAINER)
-    GOSSIP_OPTION_MAILBOX               = 18,                   //UNIT_NPC_FLAG_MAILBOX
-    GOSSIP_OPTION_OUTDOORPVP            = 19,                   //added by code (option for outdoor pvp creatures)
-    GOSSIP_OPTION_TRANSMOGRIFIER        = 20,                   //UNIT_NPC_FLAG_TRANSMOGRIFIER
-    GOSSIP_OPTION_SCENARIO              = 21,                   //UNIT_NPC_FLAG_GOSSIP
-    GOSSIP_OPTION_GARRISON_SHIPMENT     = 22,                   //UNIT_NPC_FLAG2_AI_OBSTACLE 
-    GOSSIP_OPTION_GARRISON_TRADESKILL   = 23,                   //UNIT_NPC_FLAG2_TRADESKILL_NPC
-    GOSSIP_OPTION_SHIPMENT_CRAFTER      = 24,                   //UNIT_NPC_FLAG2_SHIPMENT_CRAFTER
-    GOSSIP_OPTION_CLASS_HALL_UPGRADE    = 25,                   //UNIT_NPC_FLAG2_CLASS_HALL_UPGRADE
-    GOSSIP_OPTION_CHOICE                = 26,                   //UNIT_NPC_FLAG_GOSSIP
-    GOSSIP_OPTION_ARTIFACT_RESPEC       = 27,                   //UNIT_NPC_FLAG_ARTIFACT_POWER_RESPEC
-    GOSSIP_OPTION_ALLIED_RACE_DETAILS   = 28,                   // SMSG_OPEN_ALLIED_RACE_DETAILS
-    GOSSIP_OPTION_MAX
+    GOSSIP_OPTION_TYPE_NONE                  = 0,                    //UNIT_NPC_FLAG_NONE                (0)
+    GOSSIP_OPTION_TYPE_GOSSIP                = 1,                    //UNIT_NPC_FLAG_GOSSIP              (1)
+    GOSSIP_OPTION_TYPE_QUESTGIVER            = 2,                    //UNIT_NPC_FLAG_QUESTGIVER          (2)
+    GOSSIP_OPTION_TYPE_VENDOR                = 3,                    //UNIT_NPC_FLAG_VENDOR              (128)
+    GOSSIP_OPTION_TYPE_TAXIVENDOR            = 4,                    //UNIT_NPC_FLAG_TAXIVENDOR          (8192)
+    GOSSIP_OPTION_TYPE_TRAINER               = 5,                    //UNIT_NPC_FLAG_TRAINER             (16)
+    GOSSIP_OPTION_TYPE_SPIRITHEALER          = 6,                    //UNIT_NPC_FLAG_SPIRITHEALER        (16384)
+    GOSSIP_OPTION_TYPE_SPIRITGUIDE           = 7,                    //UNIT_NPC_FLAG_SPIRITGUIDE         (32768)
+    GOSSIP_OPTION_TYPE_INNKEEPER             = 8,                    //UNIT_NPC_FLAG_INNKEEPER           (65536)
+    GOSSIP_OPTION_TYPE_BANKER                = 9,                    //UNIT_NPC_FLAG_BANKER              (131072)
+    GOSSIP_OPTION_TYPE_PETITIONER            = 10,                   //UNIT_NPC_FLAG_PETITIONER          (262144)
+    GOSSIP_OPTION_TYPE_TABARDDESIGNER        = 11,                   //UNIT_NPC_FLAG_TABARDDESIGNER      (524288)
+    GOSSIP_OPTION_TYPE_BATTLEFIELD           = 12,                   //UNIT_NPC_FLAG_BATTLEFIELDPERSON   (1048576)
+    GOSSIP_OPTION_TYPE_AUCTIONEER            = 13,                   //UNIT_NPC_FLAG_AUCTIONEER          (2097152)
+    GOSSIP_OPTION_TYPE_STABLEPET             = 14,                   //UNIT_NPC_FLAG_STABLE              (4194304)
+    GOSSIP_OPTION_TYPE_ARMORER               = 15,                   //UNIT_NPC_FLAG_ARMORER             (4096)
+    GOSSIP_OPTION_TYPE_UNLEARNTALENTS        = 16,                   //UNIT_NPC_FLAG_TRAINER             (16) (bonus option for GOSSIP_OPTION_TYPE_TRAINER)
+    GOSSIP_OPTION_TYPE_MAILBOX               = 18,                   //UNIT_NPC_FLAG_MAILBOX
+    GOSSIP_OPTION_TYPE_OUTDOORPVP            = 19,                   //added by code (option for outdoor pvp creatures)
+    GOSSIP_OPTION_TYPE_TRANSMOGRIFIER        = 20,                   //UNIT_NPC_FLAG_TRANSMOGRIFIER
+    GOSSIP_OPTION_TYPE_SCENARIO              = 21,                   //UNIT_NPC_FLAG_GOSSIP
+    GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT     = 22,                   //UNIT_NPC_FLAG2_AI_OBSTACLE 
+    GOSSIP_OPTION_TYPE_GARRISON_TRADESKILL   = 23,                   //UNIT_NPC_FLAG2_TRADESKILL_NPC
+    GOSSIP_OPTION_TYPE_SHIPMENT_CRAFTER      = 24,                   //UNIT_NPC_FLAG2_SHIPMENT_CRAFTER
+    GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE    = 25,                   //UNIT_NPC_FLAG2_CLASS_HALL_UPGRADE
+    GOSSIP_OPTION_TYPE_CHOICE                = 26,                   //UNIT_NPC_FLAG_GOSSIP
+    GOSSIP_OPTION_TYPE_ARTIFACT_RESPEC       = 27,                   //UNIT_NPC_FLAG_ARTIFACT_POWER_RESPEC
+    GOSSIP_OPTION_TYPE_ALLIED_RACE_DETAILS   = 28,                   // SMSG_OPEN_ALLIED_RACE_DETAILS
+    GOSSIP_OPTION_TYPE_MAX
 };
 
 enum GossipOptionIcon

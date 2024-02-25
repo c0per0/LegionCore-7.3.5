@@ -132,19 +132,19 @@ void GossipDataStoreMgr::LoadGossipMenuItems()
             gMenuItem.OptionNPC = GOSSIP_ICON_CHAT;
         }
 
-        if (gMenuItem.OptionNPC == GOSSIP_ICON_SHIPMENT && gMenuItem.OptionType != GOSSIP_OPTION_GARRISON_SHIPMENT)
+        if (gMenuItem.OptionNPC == GOSSIP_ICON_SHIPMENT && gMenuItem.OptionType != GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT)
         {
-            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_ICON_SHIPMENT, but handler %i != GOSSIP_OPTION_GARRISON_SHIPMENT  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
-            gMenuItem.OptionType = GOSSIP_OPTION_GARRISON_SHIPMENT;
+            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_ICON_SHIPMENT, but handler %i != GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
+            gMenuItem.OptionType = GOSSIP_OPTION_TYPE_GARRISON_SHIPMENT;
         }
 
-        if (gMenuItem.OptionNPC == GOSSIP_ICON_CLASS_HALL_UPGRADE && gMenuItem.OptionType != GOSSIP_OPTION_CLASS_HALL_UPGRADE)
+        if (gMenuItem.OptionNPC == GOSSIP_ICON_CLASS_HALL_UPGRADE && gMenuItem.OptionType != GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE)
         {
-            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_ICON_CLASS_HALL_UPGRADE, but handler %i != GOSSIP_OPTION_CLASS_HALL_UPGRADE  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
-            gMenuItem.OptionType = GOSSIP_OPTION_CLASS_HALL_UPGRADE;
+            TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has GOSSIP_ICON_CLASS_HALL_UPGRADE, but handler %i != GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE  ", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionNPC);
+            gMenuItem.OptionType = GOSSIP_OPTION_TYPE_CLASS_HALL_UPGRADE;
         }
 
-        if (gMenuItem.OptionType >= GOSSIP_OPTION_MAX)
+        if (gMenuItem.OptionType >= GOSSIP_OPTION_TYPE_MAX)
             TC_LOG_ERROR(LOG_FILTER_SQL, "Table gossip_menu_option for menu %u, id %u has unknown option id %u. Option will not be used", gMenuItem.MenuID, gMenuItem.OptionIndex, gMenuItem.OptionType);
 
         if (gMenuItem.ActionPoiID && !sQuestDataStore->GetPointOfInterest(gMenuItem.ActionPoiID))
