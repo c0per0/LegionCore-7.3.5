@@ -19,7 +19,6 @@
 #define TRINITYCORE_PET_DEFINES_H
 
 #include "Define.h"
-#include "Optional.h"
 #include <array>
 #include <string>
 #include <vector>
