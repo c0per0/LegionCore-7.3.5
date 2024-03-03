@@ -19203,7 +19203,7 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
         }
     }
 
-    if ( !quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_NOT_REMOVE_SOURCE))
+    if (!quest->HasSpecialFlag(QUEST_SPECIAL_FLAGS_NOT_REMOVE_SOURCE))
         TakeQuestSourceItem(quest_id, true); // remove quest src item from player
 
     RemoveTimedQuest(quest_id);
@@ -19220,6 +19220,8 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
                 SendDisplayToast(itemId, ToastType::ITEM, 0, quest->RewardChoiceItemCount[reward], DisplayToastMethod::DISPLAY_TOAST_SPECIAL_UNK, quest_id, item);
                 SendNewItem(item, quest->RewardChoiceItemCount[reward], true, false);
             }
+            else if (quest->IsDFQuest())
+                SendItemRetrievalMail(itemId, quest->RewardChoiceItemCount[reward], ItemContext::Quest_Reward);
         }
     }
 
@@ -34381,6 +34383,23 @@ void Player::RefundItem(Item* item)
 
     SaveInventoryAndGoldToDB(trans);
 
+    CharacterDatabase.CommitTransaction(trans);
+}
+
+void Player::SendItemRetrievalMail(uint32 itemEntry, uint32 count, ItemContext context)
+{
+    MailSender sender(MAIL_CREATURE, UI64LIT(34337) /* The Postmaster */);
+    MailDraft draft("Recovered Item", "We recovered a lost item in the twisting nether and noted that it was yours.$B$BPlease find said object enclosed."); // This is the text used in Cataclysm, it probably wasn't changed.
+    
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+
+    if (Item* item = Item::CreateItem(itemEntry, count, context, nullptr))
+    {
+        item->SaveToDB(trans);
+        draft.AddItem(item);
+    }
+
+    draft.SendMailTo(trans, MailReceiver(this, GetGUID().GetCounter()), sender);
     CharacterDatabase.CommitTransaction(trans);
 }
 
