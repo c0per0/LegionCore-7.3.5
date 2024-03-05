@@ -10041,8 +10041,7 @@ void Player::UpdateArea(uint32 newArea)
         }
     }
 
-    ChaeckSeamlessTeleport(newArea, true);
-
+    CheckSeamlessTeleport(newArea, true);
 
     uint32 newAreaForUpdate = m_areaId;
     AddDelayedEvent(100, [=]() -> void
@@ -10133,7 +10132,7 @@ void Player::UpdateArea(uint32 newArea)
         RemoveFlag(PLAYER_FIELD_PLAYER_FLAGS, PLAYER_FLAGS_RESTING);
         SetRestType(REST_TYPE_NO);
     }
-
+    
     AddDelayedEvent(100, [this]() -> void
     {
         GetPhaseMgr().RemoveUpdateFlag(PHASE_UPDATE_FLAG_AREA_UPDATE);
@@ -10157,7 +10156,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
         GetPhaseMgr().AddUpdateFlag(PHASE_UPDATE_FLAG_ZONE_UPDATE);
     });
 
-    ChaeckSeamlessTeleport(newZone);
+    CheckSeamlessTeleport(newZone);
 
     if (m_zoneId != newZone)
     {
@@ -36838,7 +36837,7 @@ void Player::UnLockThirdSocketIfNeed(Item* item)
             item->AddBonuses(bonusID);
 }
 
-void Player::ChaeckSeamlessTeleport(uint32 newZoneOrArea, bool isArea)
+void Player::CheckSeamlessTeleport(uint32 newZoneOrArea, bool isArea)
 {
     if (!isArea && (m_zoneId ? m_zoneId : m_oldZoneId) != newZoneOrArea)
     {

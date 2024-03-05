@@ -47,7 +47,7 @@ namespace cds { namespace details {
         but not an integer constant expression.
 
         The result of this meta-algo is a type \p aligned_type<T,Alignment>::type that is \p T aligned by \p Alignment.
-        For example, with \p aligned_type the prevoius example will not generate an error:
+        For example, with \p aligned_type the previous example will not generate an error:
         \code
             typedef double  my_double;
             typedef typename cds::details::aligned_type<int, __alignof(my_double)>::type   aligned_int;

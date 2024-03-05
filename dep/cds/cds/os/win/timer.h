@@ -79,7 +79,7 @@ namespace cds { namespace OS {
                 return tmr;
             }
 
-            /// Sets internal start time to current time. Returns duration from prevoius start time to current.
+            /// Sets internal start time to current time. Returns duration from previous start time to current.
             double reset()
             {
                 native_timer_type nCur;

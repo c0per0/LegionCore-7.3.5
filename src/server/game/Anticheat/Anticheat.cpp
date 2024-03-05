@@ -721,7 +721,7 @@ bool PlayerCheatData::HandleAnticheatTests(MovementInfo& movementInfo, WorldSess
                 return false;
             }
 
-            // save prevoius point
+            // save previous point
             Player::SavePositionInDB(me->GetMapId(), me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation(), me->GetZoneId(), me->GetGUID());
             me->GetSession()->KickPlayer();
             return false;
@@ -1093,7 +1093,7 @@ bool PlayerCheatData::HandleCustomAnticheatTests(uint32 opcode, MovementInfo& mo
                 return false;
             }
 
-            // save prevoius point
+            // save previous point
             Player::SavePositionInDB(mover->GetMapId(), mover->m_movementInfo.Pos.m_positionX, mover->m_movementInfo.Pos.m_positionY, mover->m_movementInfo.Pos.m_positionZ, mover->m_movementInfo.Pos.m_orientation, mover->GetZoneId(), mover->GetGUID());
             me->GetSession()->KickPlayer();
             return false;
