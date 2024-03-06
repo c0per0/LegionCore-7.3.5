@@ -805,14 +805,18 @@ PlayerDump.DisallowOverwrite = 1
 
 #
 #    DisableWaterBreath
-#        Description: Required security level for water breathing.
-#        Default:     4  - (Disabled)
+#        Description: Required security level for water breathing (accounts with security level
+#					  greater or equal to this will have water breathing).
+#        Default:     7  - (Disabled)
 #                     0  - (Enabled, Everyone)
-#                     1  - (Enabled, Mods/GMs/Admins)
-#                     2  - (Enabled, GMs/Admins)
-#                     3  - (Enabled, Admins)
+#                     1  - (Enabled, Mods/GMs/Confirmed GMs/Realm Leaders/GM Leaders/Admins)
+#                     2  - (Enabled, GMs/Confirmed GMs/Realm Leaders/GM Leaders/Admins)
+#                     3  - (Enabled, Confirmed GMs/Realm Leaders/GM Leaders/Admins)
+#					  4  - (Enabled, Realm Leaders/GM Leaders/Admins)
+#					  5  - (Enabled, GM Leaders/Admins)
+#					  6  - (Enabled, Admins)
 
-DisableWaterBreath = 1
+DisableWaterBreath = 7
 
 #
 #    FastFishing
