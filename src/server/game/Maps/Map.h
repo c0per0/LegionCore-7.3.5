@@ -26,6 +26,7 @@
 #include "DynamicTree.h"
 #include "GameObjectModel.h"
 #include "GridDefines.h"
+#include "MapDefines.h"
 #include "MapRefManager.h"
 #include "SharedDefines.h"
 #include "Timer.h"
@@ -144,8 +145,12 @@ enum ZLiquidStatus
     LIQUID_MAP_ABOVE_WATER  = 0x00000001,
     LIQUID_MAP_WATER_WALK   = 0x00000002,
     LIQUID_MAP_IN_WATER     = 0x00000004,
-    LIQUID_MAP_UNDER_WATER  = 0x00000008
+    LIQUID_MAP_UNDER_WATER  = 0x00000008,
+    LIQUID_MAP_OCEAN_FLOOR  = 0x00000010
 };
+
+#define MAP_LIQUID_STATUS_SWIMMING (LIQUID_MAP_IN_WATER | LIQUID_MAP_UNDER_WATER)
+#define MAP_LIQUID_STATUS_IN_CONTACT (MAP_LIQUID_STATUS_SWIMMING | LIQUID_MAP_WATER_WALK)
 
 enum MMAP_LOAD_RESULT
 {
@@ -201,7 +206,7 @@ class GridMap
     float* _liquidMap;
     uint16 _gridArea;
     uint16 _liquidGlobalEntry;
-    uint8 _liquidGlobalFlags;
+    MapLiquidHeaderTypeFlags _liquidGlobalFlags;
     uint8 _liquidOffX;
     uint8 _liquidOffY;
     uint8 _liquidWidth;
@@ -232,7 +237,7 @@ public:
     float getMinHeight(float x, float y) const;
     float getLiquidLevel(float x, float y) const;
     uint8 getTerrainType(float x, float y) const;
-    ZLiquidStatus getLiquidStatus(float x, float y, float z, uint8 ReqLiquidType, LiquidData* data = nullptr);
+    ZLiquidStatus getLiquidStatus(float x, float y, float z, Optional<MapLiquidHeaderTypeFlags> ReqLiquidType, LiquidData* data = nullptr, float collisionHeight = 2.03128f) const; // DEFAULT_COLLISION_HEIGHT in Object.h
     bool fileExists() const { return _fileExists; }
 };
 
@@ -354,7 +359,7 @@ class Map
         float GetVmapHeight(float x, float y, float z) const;
         float GetGridMapHeigh(float x, float y) const;
 
-        ZLiquidStatus getLiquidStatus(float x, float y, float z, uint8 ReqLiquidType, LiquidData* data = nullptr) const;
+        ZLiquidStatus getLiquidStatus(float x, float y, float z, MapLiquidHeaderTypeFlags ReqLiquidType, LiquidData* data = nullptr, float collisionHeight = 2.03128f); // DEFAULT_COLLISION_HEIGHT in Object.h
         
         uint32 GetAreaId(float x, float y, float z, bool *isOutdoors) const;
         bool GetAreaInfo(float x, float y, float z, uint32& mogpflags, int32& adtId, int32& rootId, int32& groupId) const;

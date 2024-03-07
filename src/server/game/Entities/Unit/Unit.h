@@ -1469,8 +1469,9 @@ class Unit : public WorldObject
         bool IsValidAssistTarget(Unit const* target) const;
         bool _IsValidAssistTarget(Unit const* target, SpellInfo const* bySpell) const;
 
-        bool IsInWater() const override;
-        bool IsUnderWater() const override;
+        bool IsInWater() const;
+        bool IsUnderWater() const;
+        bool IsOnOceanFloor() const;
         virtual void UpdateUnderwaterState(Map* m, float x, float y, float z);
         bool isInAccessiblePlaceFor(Creature const* c) const;
 

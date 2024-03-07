@@ -4315,6 +4315,11 @@ bool Unit::IsUnderWater() const
     return Zliquid_status & LIQUID_MAP_UNDER_WATER;
 }
 
+bool Unit::IsOnOceanFloor() const
+{
+    return Zliquid_status & LIQUID_MAP_OCEAN_FLOOR;
+}
+
 void Unit::UpdateUnderwaterState(Map* m, float x, float y, float z)
 {
     if (!isPet() && !IsVehicle())

@@ -476,8 +476,6 @@ class WorldObject : public Object, public WorldLocation
         float GetObjectSize() const;
         void UpdateGroundPositionZ(float x, float y, float &z) const;
         void UpdateAllowedPositionZ(float x, float y, float &z) const;
-        virtual bool IsInWater() const { return false; }
-        virtual bool IsUnderWater() const { return false; }
 
         void GetRandomPoint(const Position &srcPos, float distance, float &rand_x, float &rand_y, float &rand_z) const;
         void GetRandomPoint(Position const& srcPos, float distance, Position& pos) const;

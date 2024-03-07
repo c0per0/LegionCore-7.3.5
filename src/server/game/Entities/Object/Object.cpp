@@ -2384,7 +2384,7 @@ void WorldObject::UpdateAllowedPositionZ(float x, float y, float &z) const
                 ground_z += GetPositionH();
                 if (max_z > INVALID_HEIGHT)
                 {
-                    if (z > max_z && !IsInWater())
+                    if (z > max_z)
                         z = max_z;
                     else if (z < ground_z)
                         z = ground_z;
@@ -2415,7 +2415,7 @@ void WorldObject::UpdateAllowedPositionZ(float x, float y, float &z) const
                 ground_z += GetPositionH();
                 if (max_z > INVALID_HEIGHT)
                 {
-                    if (z > max_z && !IsInWater())
+                    if (z > max_z)
                         z = max_z;
                     else if (z < ground_z)
                         z = ground_z;
@@ -3441,8 +3441,7 @@ void WorldObject::GetNearPosition(Position& pos, float dist, float angle)
 void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float angle)
 {
     angle += GetOrientation();
-    if (!IsInWater())
-        pos.m_positionZ += 2.0f;
+    pos.m_positionZ += 2.0f;
     float destx = pos.m_positionX + dist * std::cos(angle);
     float desty = pos.m_positionY + dist * std::sin(angle);
 
@@ -3457,12 +3456,6 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
     float ground = GetHeight(destx, desty, MAX_HEIGHT, true);
     float floor = GetHeight(destx, desty, pos.m_positionZ, true);
     float destz = fabs(ground - pos.m_positionZ) <= fabs(floor - pos.m_positionZ) ? ground : floor;
-
-    if (IsInWater()) // In water not allow change Z to ground
-    {
-        if (pos.m_positionZ > destz)
-            destz = pos.m_positionZ;
-    }
 
     bool _checkZ = true;
     if (isFalling) // Allowed point in air if we falling

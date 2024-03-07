@@ -47,4 +47,20 @@ enum NavTerrainFlag
     NAV_MAGMA_SLIME = 1 << (63 - NAV_AREA_MAGMA_SLIME)
 };
 
+enum class MapLiquidHeaderTypeFlags : uint8
+{
+    NoWater = 0x00,
+    Water = 0x01,
+    Ocean = 0x02,
+    Magma = 0x04,
+    Slime = 0x08,
+
+    DarkWater = 0x10,
+    WMOWater = 0x20,
+
+    AllLiquids = Water | Ocean | Magma | Slime
+};
+
+DEFINE_ENUM_FLAG(MapLiquidHeaderTypeFlags);
+
 #endif /* _MAPDEFINES_H */

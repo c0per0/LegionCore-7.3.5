@@ -18,6 +18,7 @@
 
 #include "TerrainBuilder.h"
 
+#include "MapDefines.h"
 #include "MapBuilder.h"
 
 #include "VMapManager2.h"
@@ -388,7 +389,7 @@ namespace MMAP
                 // default is true, will change to false if needed
                 useTerrain = true;
                 useLiquid = true;
-                uint8 liquidType = MAP_LIQUID_TYPE_NO_WATER;
+                MapLiquidHeaderTypeFlags liquidType = MapLiquidHeaderTypeFlags::NoWater;
                 // FIXME: "warning: the address of ‘liquid_type’ will always evaluate as ‘true’"
 
                 // if there is no liquid, don't use liquid
@@ -402,18 +403,18 @@ namespace MMAP
                         default:
                             useLiquid = false;
                             break;
-                        case MAP_LIQUID_TYPE_WATER:
-                        case MAP_LIQUID_TYPE_OCEAN:
+                        case MapLiquidHeaderTypeFlags::Water:
+                        case MapLiquidHeaderTypeFlags::Ocean:
                             // merge different types of water
                             liquidType = NAV_WATER;
                             break;
-                        case MAP_LIQUID_TYPE_MAGMA:
+                        case MapLiquidHeaderTypeFlags::Magma:
                             liquidType = NAV_MAGMA;
                             break;
-                        case MAP_LIQUID_TYPE_SLIME:
+                        case MapLiquidHeaderTypeFlags::Slime:
                             liquidType = NAV_SLIME;
                             break;
-                        case MAP_LIQUID_TYPE_DARK_WATER:
+                        case MapLiquidHeaderTypeFlags::DarkWater:
                             // players should not be here, so logically neither should creatures
                             useTerrain = false;
                             useLiquid = false;

@@ -1192,11 +1192,14 @@ uint32 Player::EnvironmentalDamage(EnviromentalDamage type, uint32 damage)
     {
         if (type == DAMAGE_FALL)                               // DealDamage not apply item durability loss at self damage
         {
-            TC_LOG_DEBUG(LOG_FILTER_PLAYER, "We are fall to death, losing 10 percent durability");
+            TC_LOG_DEBUG(LOG_FILTER_PLAYER, "Player::EnvironmentalDamage: Player '%s' (%s) fall to death, losing {%.1f} durability",
+                GetName(), GetGUID().ToString(), sWorld->getRate(RATE_DURABILITY_LOSS_ON_DEATH));
+
             if (!GetUInt32Value(PLAYER_FIELD_STURDINESS))
-                DurabilityLossAll(0.10f, false, true);
+                DurabilityLossAll(sWorld->getRate(RATE_DURABILITY_LOSS_ON_DEATH), false, true);
+
             // durability lost message
-            SendDurabilityLoss(this, 10);
+            SendDurabilityLoss(this, uint32(sWorld->getRate(RATE_DURABILITY_LOSS_ON_DEATH) * 100.0f));
         }
 
         UpdateAchievementCriteria(CRITERIA_TYPE_DEATHS_FROM, 1, type);

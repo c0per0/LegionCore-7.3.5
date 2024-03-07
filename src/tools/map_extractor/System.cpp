@@ -378,16 +378,6 @@ struct map_heightHeader
     float  gridMaxHeight;
 };
 
-#define MAP_LIQUID_TYPE_NO_WATER    0x00
-#define MAP_LIQUID_TYPE_WATER       0x01
-#define MAP_LIQUID_TYPE_OCEAN       0x02
-#define MAP_LIQUID_TYPE_MAGMA       0x04
-#define MAP_LIQUID_TYPE_SLIME       0x08
-
-#define MAP_LIQUID_TYPE_DARK_WATER  0x10
-#define MAP_LIQUID_TYPE_WMO_WATER   0x20
-
-
 #define MAP_LIQUID_NO_TYPE    0x0001
 #define MAP_LIQUID_NO_HEIGHT  0x0002
 

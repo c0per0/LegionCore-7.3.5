@@ -2894,7 +2894,7 @@ uint8 GridMap::getTerrainType(float x, float y) const
 }
 
 // Get water state on map
-inline ZLiquidStatus GridMap::getLiquidStatus(float x, float y, float z, uint8 ReqLiquidType, LiquidData* data)
+inline ZLiquidStatus GridMap::getLiquidStatus(float x, float y, float z, MapLiquidHeaderTypeFlags ReqLiquidType, LiquidData* data)
 {
     // Check water type (if no water return)
     if (!_liquidGlobalFlags && !_liquidFlags)
@@ -3265,91 +3265,104 @@ uint8 Map::GetTerrainType(float x, float y) const
     return 0;
 }
 
-ZLiquidStatus Map::getLiquidStatus(float x, float y, float z, uint8 ReqLiquidType, LiquidData* data) const
+constexpr float GROUND_LEVEL_OFFSET_HACK = 0.02f; // due to floating point precision issues, we have to resort to a small hack to fix inconsistencies in liquids
+
+// Get water state on map
+ZLiquidStatus GridMap::getLiquidStatus(float x, float y, float z, Optional<MapLiquidHeaderTypeFlags> ReqLiquidType, LiquidData* data, float collisionHeight) const
 {
-    ZLiquidStatus result = LIQUID_MAP_NO_WATER;
-    VMAP::IVMapManager* vmgr = VMAP::VMapFactory::createOrGetVMapManager();
-    float liquid_level = INVALID_HEIGHT;
-    float ground_level = INVALID_HEIGHT;
-    uint32 liquid_type = 0;
-    if (vmgr->GetLiquidLevel(GetId(), x, y, z, ReqLiquidType, liquid_level, ground_level, liquid_type))
+    // Check water type (if no water return)
+    if (_liquidGlobalFlags == MapLiquidHeaderTypeFlags::NoWater && !_liquidFlags)
+        return LIQUID_MAP_NO_WATER;
+
+    // Get cell
+    float cx = MAP_RESOLUTION * (CENTER_GRID_ID - x / SIZE_OF_GRIDS);
+    float cy = MAP_RESOLUTION * (CENTER_GRID_ID - y / SIZE_OF_GRIDS);
+
+    int x_int = (int)cx & (MAP_RESOLUTION - 1);
+    int y_int = (int)cy & (MAP_RESOLUTION - 1);
+
+    // Check water type in cell
+    int idx = (x_int >> 3) * 16 + (y_int >> 3);
+    MapLiquidHeaderTypeFlags type = _liquidFlags ? _liquidFlags[idx] : _liquidGlobalFlags;
+    uint32 entry = _liquidEntry ? _liquidEntry[idx] : _liquidGlobalEntry;
+    if (LiquidTypeEntry const* liquidEntry = sLiquidTypeStore.LookupEntry(entry))
     {
-        #ifdef TRINITY_DEBUG
-        TC_LOG_DEBUG(LOG_FILTER_MAPS, "getLiquidStatus(): vmap liquid level: %f ground: %f type: %u", liquid_level, ground_level, liquid_type);
-        #endif
-        // Check water level and ground level
-        if (liquid_level > ground_level && z > ground_level - 2)
+        type &= MapLiquidHeaderTypeFlags::DarkWater;
+        uint32 liqTypeIdx = liquidEntry->SoundBank;
+        if (entry < 21)
         {
-            // All ok in water -> store data
-            if (data)
+            if (AreaTableEntry const* area = sAreaTableStore.LookupEntry(getArea(x, y)))
             {
-                // hardcoded in client like this
-                if (GetId() == 530 && liquid_type == 2)
-                    liquid_type = 15;
-
-                uint32 liquidFlagType = 0;
-                if (LiquidTypeEntry const* liq = sLiquidTypeStore.LookupEntry(liquid_type))
-                    liquidFlagType = liq->SoundBank;
-
-                if (liquid_type && liquid_type < 21)
+                uint32 overrideLiquid = area->LiquidTypeID[liquidEntry->SoundBank];
+                if (!overrideLiquid && area->ParentAreaID)
                 {
-                    if (AreaTableEntry const* area = sAreaTableStore.LookupEntry(GetAreaId(x, y, z)))
-                    {
-                        uint32 overrideLiquid = area->LiquidTypeID[liquidFlagType];
-                        if (!overrideLiquid && area->ParentAreaID)
-                        {
-                            area = sAreaTableStore.LookupEntry(area->ParentAreaID);
-                            if (area)
-                                overrideLiquid = area->LiquidTypeID[liquidFlagType];
-                        }
-
-                        if (LiquidTypeEntry const* liq = sLiquidTypeStore.LookupEntry(overrideLiquid))
-                        {
-                            liquid_type = overrideLiquid;
-                            liquidFlagType = liq->SoundBank;
-                        }
-                    }
+                    area = sAreaTableStore.LookupEntry(area->ParentAreaID);
+                    if (area)
+                        overrideLiquid = area->LiquidTypeID[liquidEntry->SoundBank];
                 }
 
-                data->level = liquid_level;
-                data->depth_level = ground_level;
-
-                data->entry = liquid_type;
-                data->type_flags = 1 << liquidFlagType;
+                if (LiquidTypeEntry const* liq = sLiquidTypeStore.LookupEntry(overrideLiquid))
+                {
+                    entry = overrideLiquid;
+                    liqTypeIdx = liq->SoundBank;
+                }
             }
-
-            float delta = liquid_level - z;
-
-            // Get position delta
-            if (delta > 2.0f)                   // Under water
-                return LIQUID_MAP_UNDER_WATER;
-            if (delta > 0.0f)                   // In water
-                return LIQUID_MAP_IN_WATER;
-            if (delta > -0.1f)                   // Walk on water
-                return LIQUID_MAP_WATER_WALK;
-            result = LIQUID_MAP_ABOVE_WATER;
         }
+
+        type |= MapLiquidHeaderTypeFlags(1 << liqTypeIdx);
     }
 
-    if (GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
+    if (type == MapLiquidHeaderTypeFlags::NoWater)
+        return LIQUID_MAP_NO_WATER;
+
+    // Check req liquid type mask
+    if (ReqLiquidType && (*ReqLiquidType & type) == MapLiquidHeaderTypeFlags::NoWater)
+        return LIQUID_MAP_NO_WATER;
+
+    // Check water level:
+    // Check water height map
+    int lx_int = x_int - _liquidOffY;
+    int ly_int = y_int - _liquidOffX;
+    if (lx_int < 0 || lx_int >= _liquidHeight)
+        return LIQUID_MAP_NO_WATER;
+    if (ly_int < 0 || ly_int >= _liquidWidth)
+        return LIQUID_MAP_NO_WATER;
+
+    // Get water level
+    float liquid_level = _liquidMap ? _liquidMap[lx_int * _liquidWidth + ly_int] : _liquidLevel;
+    // Get ground level (sub 0.02 for fix some errors)
+    float ground_level = getHeight(x, y);
+
+    // Check water level and ground level
+    if (liquid_level < (ground_level - GROUND_LEVEL_OFFSET_HACK) || z < (ground_level - GROUND_LEVEL_OFFSET_HACK))
+        return LIQUID_MAP_NO_WATER;
+
+    // All ok in water -> store data
+    if (data)
     {
-        LiquidData map_data;
-        ZLiquidStatus map_result = gmap->getLiquidStatus(x, y, z, ReqLiquidType, &map_data);
-        // Not override LIQUID_MAP_ABOVE_WATER with LIQUID_MAP_NO_WATER:
-        if (map_result != LIQUID_MAP_NO_WATER && (map_data.level > ground_level))
-        {
-            if (data)
-            {
-                // hardcoded in client like this
-                if (GetId() == 530 && map_data.entry == 2)
-                    map_data.entry = 15;
-
-                *data = map_data;
-            }
-            return map_result;
-        }
+        data->entry = entry;
+        data->type_flags = type;
+        data->level = liquid_level;
+        data->depth_level = ground_level;
     }
-    return result;
+
+    // For speed check as int values
+    float delta = liquid_level - z;
+
+    uint32 status = LIQUID_MAP_ABOVE_WATER; // Above water
+
+    if (delta > collisionHeight)            // Under water
+        status = LIQUID_MAP_UNDER_WATER;
+    else if (delta > 0.0f)                  // In water
+        status = LIQUID_MAP_IN_WATER;
+    else if (delta > -0.1f)                 // Walk on water
+        status = LIQUID_MAP_WATER_WALK;
+
+    if (status != LIQUID_MAP_ABOVE_WATER)
+        if (std::fabs(ground_level - z) <= GROUND_HEIGHT_TOLERANCE)
+            status |= LIQUID_MAP_OCEAN_FLOOR;
+
+    return static_cast<ZLiquidStatus>(status);
 }
 
 float Map::GetWaterLevel(float x, float y) const
