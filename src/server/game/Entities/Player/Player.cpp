@@ -3863,7 +3863,7 @@ void Player::GiveLevel(uint8 level)
 
     for (uint8 i = 0; i < INVENTORY_SLOT_BAG_END; ++i)
         if (Item* item = m_items[i])
-            if (CanUseAttackType(GetAttackBySlot(i)))
+            if (CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
                 _ApplyItemMods(item, i, false);
 
     PlayerLevelInfo info;
@@ -3964,7 +3964,7 @@ void Player::GiveLevel(uint8 level)
 
     for (uint8 i = 0; i < INVENTORY_SLOT_BAG_END; ++i)
         if (Item* item = m_items[i])
-            if (CanUseAttackType(GetAttackBySlot(i)))
+            if (CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
                 _ApplyItemMods(item, i, true);
 
     RecalculateAmountAllAuras();
@@ -11139,7 +11139,7 @@ void Player::UpdateEquipSpellsAtFormChange()
 {
     for (uint8 i = 0; i < INVENTORY_SLOT_BAG_END; ++i)
     {
-        if (m_items[i] && !m_items[i]->CantBeUse() && CanUseAttackType(GetAttackBySlot(i)))
+        if (m_items[i] && !m_items[i]->CantBeUse() && CanUseAttackType(GetAttackBySlot(i, m_items[i]->GetTemplate()->GetInventoryType())))
         {
             ApplyItemEquipSpell(m_items[i], false, true);     // remove spells that not fit to form
             ApplyItemEquipSpell(m_items[i], true, true);      // add spells that fit form but not active
@@ -11285,7 +11285,7 @@ void Player::CastItemCombatSpell(Unit* target, WeaponAttackType attType, uint32 
                             continue;
                         // Check if item is useable (forms or disarm)
                         if (attType == BASE_ATTACK)
-                            if (!IsUseEquipedWeapon(true) && !IsInFeralForm())
+                            if (!IsUseEquippedWeapon(true) && !IsInFeralForm())
                                 continue;
                     }
                     CastItemCombatSpell(target, attType, procVictim, procEx, item, proto);
@@ -11509,7 +11509,7 @@ void Player::_RemoveAllItemMods()
     {
         if (m_items[i])
         {
-            if (m_items[i]->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i)) || !m_items[i]->GetTemplate())
+            if (m_items[i]->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i, m_items[i]->GetTemplate()->GetInventoryType())) || !m_items[i]->GetTemplate())
                 continue;
 
             _ApplyItemBonuses(m_items[i], i, false);
@@ -11528,7 +11528,7 @@ void Player::_RemoveAllItemMods()
             if (proto->GetItemSet())
                 RemoveItemsSetItem(this, proto);
 
-            if (m_items[i]->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i)))
+            if (m_items[i]->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i, m_items[i]->GetTemplate()->GetInventoryType())))
                 continue;
 
             ApplyItemEquipSpell(m_items[i], false);
@@ -11556,7 +11556,7 @@ void Player::_ApplyAllItemMods()
             if (proto->GetItemSet())
                 AddItemsSetItem(this, item);
 
-            if (item->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i)))
+            if (item->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
                 continue;
 
             ApplyItemEquipSpell(item, true);
@@ -11569,7 +11569,7 @@ void Player::_ApplyAllItemMods()
     {
         if (auto const& item = m_items[i])
         {
-            if (item->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i)))
+            if (item->CantBeUse() || !CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
                 continue;
 
             _ApplyItemBonuses(item, i, true);
@@ -11585,7 +11585,7 @@ void Player::RescaleAllItemsIfNeeded(bool keepHPPct /*= false*/)
 
     for (uint8 i = 0; i < INVENTORY_SLOT_BAG_END; ++i)
         if (Item* item = m_items[i])
-            if (CanUseAttackType(GetAttackBySlot(i)))
+            if (CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
             {
                 if (ItemTemplate const* temp = item->GetTemplate())
                 {
@@ -11598,7 +11598,7 @@ void Player::RescaleAllItemsIfNeeded(bool keepHPPct /*= false*/)
 
     for (uint8 i = 0; i < INVENTORY_SLOT_BAG_END; ++i)
         if (Item* item = m_items[i])
-            if (CanUseAttackType(GetAttackBySlot(i)))
+            if (CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
             {
                 if (ItemTemplate const* temp = item->GetTemplate())
                 {
@@ -13000,9 +13000,14 @@ Bag* Player::GetBagByPos(uint8 bag) const
 
 Item* Player::GetUseableItemByPos(uint8 bag, uint8 slot) const
 {
-    if (!CanUseAttackType(GetAttackBySlot(slot)))
+    Item* item = GetItemByPos(bag, slot);
+    if (!item)
         return NULL;
-    return GetItemByPos(bag, slot);
+
+    if (!CanUseAttackType(GetAttackBySlot(slot, item->GetTemplate()->GetInventoryType())))
+        return NULL;
+
+    return item;
 }
 
 Item* Player::GetWeaponForAttack(WeaponAttackType attackType, bool useable /*= false*/) const
@@ -13021,7 +13026,11 @@ Item* Player::GetWeaponForAttack(WeaponAttackType attackType, bool useable /*= f
         item = GetUseableItemByPos(INVENTORY_SLOT_BAG_0, slot);
     else
         item = GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+
     if (!item || item->GetTemplate()->GetClass() != ITEM_CLASS_WEAPON)
+        return NULL;
+    
+    if ((attackType == RANGED_ATTACK) != item->GetTemplate()->IsRangedWeapon())
         return NULL;
 
     if (!useable)
@@ -13067,11 +13076,11 @@ Item* Player::GetChildItemByGuid(ObjectGuid guid) const
     return nullptr;
 }
 
-uint8 Player::GetAttackBySlot(uint8 slot)
+uint8 Player::GetAttackBySlot(uint8 slot, InventoryType inventoryType)
 {
     switch (slot)
     {
-        case EQUIPMENT_SLOT_MAINHAND: return BASE_ATTACK;
+        case EQUIPMENT_SLOT_MAINHAND: return inventoryType != INVTYPE_RANGED && inventoryType != INVTYPE_RANGEDRIGHT ? BASE_ATTACK : RANGED_ATTACK;
         case EQUIPMENT_SLOT_OFFHAND:  return OFF_ATTACK;
         default:                      return MAX_ATTACK;
     }
@@ -39031,7 +39040,7 @@ void Player::RescaleAllForTimeWalk(uint32 level, uint32 ilevelMax, uint32 ilevel
     {
         for (uint8 i = 0; i < INVENTORY_SLOT_BAG_END; ++i)
             if (Item* item = m_items[i])
-                if (CanUseAttackType(GetAttackBySlot(i)))
+                if (CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
                     _ApplyItemMods(item, i, false);
     }
 
@@ -39044,7 +39053,7 @@ void Player::RescaleAllForTimeWalk(uint32 level, uint32 ilevelMax, uint32 ilevel
     {
         for (uint8 i = 0; i < INVENTORY_SLOT_BAG_END; ++i)
             if (Item* item = m_items[i])
-                if (CanUseAttackType(GetAttackBySlot(i)))
+                if (CanUseAttackType(GetAttackBySlot(i, item->GetTemplate()->GetInventoryType())))
                     _ApplyItemMods(item, i, true);
 
         SetHealth(std::max(uint64(1ull), uint64(healthPct * (float)GetMaxHealth() / 100.0f)));

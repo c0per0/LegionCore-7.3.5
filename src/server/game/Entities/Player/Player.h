@@ -1657,7 +1657,7 @@ class Player : public Unit, public GridObject<Player>
         Item* GetWeaponForAttack(WeaponAttackType attackType, bool useable = false) const;
         Item* GetShield(bool useable = false) const;
         Item* GetChildItemByGuid(ObjectGuid guid) const;
-        static uint8 GetAttackBySlot(uint8 slot);        // MAX_ATTACK if not weapon slot
+        static uint8 GetAttackBySlot(uint8 slot, InventoryType inventoryType);        // MAX_ATTACK if not weapon slot
         std::set<Item*> &GetItemUpdateQueue() { return m_itemUpdateQueue; }
         static bool IsInventoryPos(uint16 pos) { return IsInventoryPos(pos >> 8, pos & 255); }
         static bool IsInventoryPos(uint8 bag, uint8 slot);
@@ -1851,7 +1851,7 @@ class Player : public Unit, public GridObject<Player>
         void AddArmorProficiency(uint32 newflag) { m_ArmorProficiency |= newflag; }
         uint32 GetWeaponProficiency() const { return m_WeaponProficiency; }
         uint32 GetArmorProficiency() const { return m_ArmorProficiency; }
-        bool IsUseEquipedWeapon(bool mainhand) const
+        bool IsUseEquippedWeapon(bool mainhand) const
         {
             // disarm applied only to mainhand weapon
             return !IsInFeralForm() && (!mainhand || !HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED));
@@ -1859,11 +1859,16 @@ class Player : public Unit, public GridObject<Player>
         bool IsTwoHandUsed() const
         {
             Item* mainItem = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND);
+            if (!mainItem)
+                return false;
 
+            ItemTemplate const* itemTemplate = mainItem->GetTemplate();
             if (mainItem && mainItem->GetTemplate()->GetSubClass() == ITEM_SUBCLASS_WEAPON_WAND)
                 return false;
 
-            return mainItem && ((mainItem->GetTemplate()->GetInventoryType() == INVTYPE_2HWEAPON && !CanTitanGrip()) || mainItem->GetTemplate()->GetInventoryType() == INVTYPE_RANGED || mainItem->GetTemplate()->GetInventoryType() == INVTYPE_THROWN || mainItem->GetTemplate()->GetInventoryType() == INVTYPE_RANGEDRIGHT);
+            return (itemTemplate->GetInventoryType() == INVTYPE_2HWEAPON && !CanTitanGrip()) ||
+                itemTemplate->GetInventoryType() == INVTYPE_RANGED ||
+                (itemTemplate->GetInventoryType() == INVTYPE_RANGEDRIGHT && itemTemplate->GetClass() == ITEM_CLASS_WEAPON && itemTemplate->GetSubClass() != ITEM_SUBCLASS_WEAPON_WAND);
         }
         void SendNewItem(Item* item, uint32 count, bool received, bool created, bool broadcast = false, bool bonusRoll = false);
         bool BuyItemFromVendorSlot(ObjectGuid vendorguid, uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot);

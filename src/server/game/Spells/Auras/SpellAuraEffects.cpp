@@ -3475,7 +3475,7 @@ void AuraEffect::HandleAuraModDisarm(AuraApplication const* aurApp, uint8 mode, 
     // Handle damage modification, shapeshifted druids are not affected
     if (target->IsPlayer() && !target->IsInFeralForm())
         if (Item* pItem = target->ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
-            if (Player::GetAttackBySlot(slot) < MAX_ATTACK)
+            if (Player::GetAttackBySlot(slot, pItem->GetTemplate()->GetInventoryType()) < MAX_ATTACK)
                 target->ToPlayer()->_ApplyWeaponDamage(slot, pItem, !apply);
 
     // if disarm effects should be applied, wait to set flag until damage mods are unapplied
