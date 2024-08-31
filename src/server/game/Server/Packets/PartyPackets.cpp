@@ -848,6 +848,10 @@ void WorldPackets::Party::PartyMemberStats::Initialize(Player* player)
         MemberStats.PetStats->CurrentHealth = pet->GetHealth();
         MemberStats.PetStats->MaxHealth = pet->GetMaxHealth();
 
+        MemberStats.PetStats->PowerType = pet->getPowerType();
+        MemberStats.PetStats->CurrentPower = pet->GetPower(pet->getPowerType());
+        MemberStats.PetStats->MaxPower = pet->GetMaxPower(pet->getPowerType());
+
         Unit::VisibleAuraContainer const visibleAuras = pet->GetVisibleAuras();
         for (AuraApplication const* aurApp : visibleAuras)
         {
@@ -975,6 +979,10 @@ ByteBuffer& operator<<(ByteBuffer& data, WorldPackets::Party::GroupPetStats cons
 
     data << petStats.CurrentHealth;
     data << petStats.MaxHealth;
+
+    data << petStats.PowerType;
+    data << petStats.CurrentPower;
+    data << petStats.MaxPower;
 
     data << petStats.AuraList;
 
