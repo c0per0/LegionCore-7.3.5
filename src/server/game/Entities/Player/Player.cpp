@@ -8543,6 +8543,7 @@ bool Player::UpdatePosition(float x, float y, float z, float orientation, bool t
     if (!Unit::UpdatePosition(x, y, z, orientation, teleport))
         return false;
 
+    // group update
     if (GetGroup())
         SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
 
@@ -10183,10 +10184,6 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
         });
     }
 
-    // group update
-    if (GetGroup())
-        SetGroupUpdateFlag(GROUP_UPDATE_FULL);
-
     if (newZone != (m_zoneId ? m_zoneId : m_oldZoneId))
         UpdateAreaQuestTasks(newZone, m_zoneId ? m_zoneId : m_oldZoneId);
 
@@ -10200,6 +10197,10 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
             veh->m_zoneId = m_zoneId;
 
     sScriptMgr->OnPlayerUpdateZone(this, newZone, newArea);
+
+    // group update
+    if (GetGroup())
+        SetGroupUpdateFlag(GROUP_UPDATE_FULL);
 
     // zone changed, so area changed as well, update it
     UpdateArea(newArea);

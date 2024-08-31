@@ -173,9 +173,6 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
     if (owner->IsPlayer() && isControlled() && !isTemporarySummoned())
         owner->SetLastPetEntry(petentry);
 
-    if (owner->GetGroup())
-        owner->SetGroupUpdateFlag(GROUP_UPDATE_PET);
-
     if (petInfo->pet_type == HUNTER_PET)
     {
         CreatureTemplate const* creatureInfo = sObjectMgr->GetCreatureTemplate(petentry);
@@ -339,6 +336,9 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
     TC_LOG_DEBUG(LOG_FILTER_PETS, "New Pet has guid %u", GetGUIDLow());
 
     owner->SendTalentsInfoData(true);
+
+    if (owner->GetGroup())
+        owner->SetGroupUpdateFlag(GROUP_UPDATE_PET);
 
     if (getPetType() == HUNTER_PET)
     {
