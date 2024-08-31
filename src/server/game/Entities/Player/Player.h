@@ -3039,7 +3039,6 @@ class Player : public Unit, public GridObject<Player>
         uint8 GetSubGroup() const { return m_group.getSubGroup(); }
         uint32 GetGroupUpdateFlag() const;
         void SetGroupUpdateFlag(uint32 flag);
-        void RemoveGroupUpdateFlag(uint32 flag);
         Player* GetNextRandomRaidMember(float radius);
         PartyResult CanUninviteFromGroup() const;
         int32 NextGroupUpdateSequenceNumber(GroupCategory category);

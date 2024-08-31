@@ -647,9 +647,6 @@ bool Group::AddMember(Player* player)
         }
 
         player->SetGroupUpdateFlag(GROUP_UPDATE_FULL);
-        if (Pet* pet = player->GetPet())
-            pet->SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
-
         UpdatePlayerOutOfRange(player);
 
         // quest related GO state dependent from raid membership
@@ -1830,18 +1827,18 @@ void Group::SendUpdateDestroyGroupToPlayer(Player* player) const
 
 void Group::UpdatePlayerOutOfRange(Player* player)
 {
-    if (!player || !player->IsInWorld() || !player->CanContact())
+    if (!player || !player->IsInWorld())
         return;
 
     WorldPackets::Party::PartyMemberStatseUpdate packet;
     packet.Initialize(player);
 
     auto p = packet.Write();
-    for (auto itr = GetFirstMember(); itr != nullptr; itr = itr->next())
+    for (GroupReference* itr = GetFirstMember(); itr != nullptr; itr = itr->next())
     {
-        auto member = itr->getSource();
-        if (member && member != player && (!member->IsInMap(player) || !member->IsWithinDist(player, member->GetSightRange(), false)))
-            member->SendDirectMessage(p);
+        Player* member = itr->getSource();
+        if (member && (!member->IsInMap(player) || !member->IsWithinDist(player, member->GetSightRange(player), false)))
+            member->GetSession()->SendPacket(p);
     }
 }
 

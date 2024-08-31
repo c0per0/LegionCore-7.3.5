@@ -251,7 +251,9 @@ void WorldSession::HandleAreaTrigger(WorldPackets::Misc::AreaTrigger& packet)
         if (sWorld->IsFFAPvPRealm())
         {
             player->RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
-            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
+
+            if (player->GetGroup())
+                player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
         }
 
         return;

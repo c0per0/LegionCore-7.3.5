@@ -173,6 +173,9 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
     if (owner->IsPlayer() && isControlled() && !isTemporarySummoned())
         owner->SetLastPetEntry(petentry);
 
+    if (owner->GetGroup())
+        owner->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
+
     if (petInfo->pet_type == HUNTER_PET)
     {
         CreatureTemplate const* creatureInfo = sObjectMgr->GetCreatureTemplate(petentry);
@@ -334,8 +337,6 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
     owner->PetSpellInitialize();
 
     TC_LOG_DEBUG(LOG_FILTER_PETS, "New Pet has guid %u", GetGUIDLow());
-
-    SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
 
     owner->SendTalentsInfoData(true);
 
@@ -2183,30 +2184,6 @@ void Pet::ProhibitSpellSchool(SpellSchoolMask idSchoolMask, uint32 unTimeMs)
     if (GetOwner())
         if (auto owner = GetOwner()->ToPlayer())
             owner->SendDirectMessage(cooldowns.Write());
-}
-
-void Pet::SetGroupUpdateFlag(uint32 flag)
-{
-    return;
-
-    Player* player = GetOwner()->ToPlayer();
-    if (!player)
-        return;
-
-    if (player->GetGroup())
-    {
-        m_groupUpdateMask |= flag;
-        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
-    }
-}
-
-void Pet::ResetGroupUpdateFlag()
-{
-    return;
-    m_groupUpdateMask = GROUP_UPDATE_FLAG_PET_NONE;
-
-    if (Player* player = GetOwner()->ToPlayer())
-        player->RemoveGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
 }
 
 bool Pet::isControlled() const

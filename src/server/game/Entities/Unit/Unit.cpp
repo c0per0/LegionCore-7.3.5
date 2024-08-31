@@ -11122,7 +11122,7 @@ void Unit::setPowerType(Powers fieldPower)
     //! Maybe it's index? but for vehicle send power category.
     SetFieldPowerType(fieldPower);
 
-    if (IsPlayer())
+    if (IsPlayer() && ToPlayer()->GetGroup())
         ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POWER_TYPE);
 
     Powers new_powertype = fieldPower;
@@ -16953,7 +16953,8 @@ void Unit::SetHealth(uint64 val, uint32 spellId)
             player->SendSpectatorAddonMsgToBG(msg);
         }
 
-        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_HP);
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_HP);
     }
     else if (Creature* creature = ToCreature())
     {
@@ -16962,8 +16963,8 @@ void Unit::SetHealth(uint64 val, uint32 spellId)
             if (pet->isControlled())
             {
                 Unit* owner = GetOwner();
-                if (owner && (owner->IsPlayer()))
-                    pet->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_CUR_HP);
+                if (owner && owner->IsPlayer() && owner->ToPlayer()->GetGroup())
+                    owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_CUR_HP);
             }
         }
     }
@@ -16979,15 +16980,17 @@ void Unit::SetMaxHealth(uint64 val)
 
     if (IsPlayer())
     {
-        if (ToPlayer()->HaveSpectators())
+        Player* player = ToPlayer();
+        if (player->HaveSpectators())
         {
             SpectatorAddonMsg msg;
-            msg.SetPlayer(ToPlayer()->GetGUID());
+            msg.SetPlayer(player->GetGUID());
             msg.SetMaxHP(val);
-            ToPlayer()->SendSpectatorAddonMsgToBG(msg);
+            player->SendSpectatorAddonMsgToBG(msg);
         }
 
-        ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_MAX_HP);
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_MAX_HP);
     }
     else if (Creature* creature = ToCreature())
     {
@@ -16997,7 +17000,7 @@ void Unit::SetMaxHealth(uint64 val)
             {
                 Unit* owner = GetOwner();
                 if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-                    pet->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MAX_HP);
+                    owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MAX_HP);
             }
         }
     }
@@ -17202,7 +17205,17 @@ void Unit::SetPower(Powers power, int32 val, bool send)
             player->SendSpectatorAddonMsgToBG(msg);
         }
 
-        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_POWER);
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_POWER);
+    }
+    else if (Pet* pet = ToCreature()->ToPet())
+    {
+        if (pet->isControlled())
+        {
+            Unit* owner = GetOwner();
+            if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
+        }
     }
 }
 
@@ -17216,7 +17229,8 @@ void Unit::SetMaxPower(Powers power, int32 val)
 
     if (IsPlayer())
     {
-        if (ToPlayer()->HaveSpectators())
+        Player* player = ToPlayer();
+        if (player->HaveSpectators())
         {
             uint8 mod = 1;
             if (power == POWER_RAGE || power == POWER_RUNIC_POWER)
@@ -17226,10 +17240,20 @@ void Unit::SetMaxPower(Powers power, int32 val)
             msg.SetPlayer(GetGUID());
             msg.SetMaxPower(int32(val / mod));
             msg.SetPowerType(power);
-            ToPlayer()->SendSpectatorAddonMsgToBG(msg);
+            player->SendSpectatorAddonMsgToBG(msg);
         }
 
-        ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_MAX_POWER);
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_MAX_POWER);
+    }
+    else if (Pet* pet = ToCreature()->ToPet())
+    {
+        if (pet->isControlled())
+        {
+            Unit* owner = GetOwner();
+            if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
+        }
     }
 }
 
@@ -18600,11 +18624,11 @@ void Unit::SetDisplayId(uint32 modelId, bool resize /* = false */)
        }
     }
     
-       //for custom morph if reshift - need set scale normally
+    //for custom morph if reshift - need set scale normally
     if (IsPlayer() && GetCustomDisplayId() && !(modelId == GetCustomDisplayId()))
        SetObjectScale(1.0f);
     
-       // this need for custom morph (donate)
+    // this need for custom morph (donate)
     if (resize && (IsPlayer() || GetEntry() == 230008))
         SetObjectScale(1.0f / GetModelSize(modelId));
     
@@ -18624,9 +18648,10 @@ void Unit::SetDisplayId(uint32 modelId, bool resize /* = false */)
         Pet* pet = ToPet();
         if (!pet->isControlled())
             return;
-        Unit* owner = GetOwner();
-        if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-            pet->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MODEL_ID);
+        if (Unit* owner = GetOwner())
+            if (Player* player = owner->ToPlayer())
+                if (player->GetGroup())
+                    player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MODEL_ID);
     }
 }
 
@@ -19046,7 +19071,8 @@ uint32 Unit::GetCastingTimeForBonus(SpellInfo const* spellProto, DamageEffectTyp
 void Unit::UpdateAuraForGroup()
 {
     if (Player* player = ToPlayer())
-        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_AURAS);
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_AURAS);
     else if (IsCreature() && ToCreature()->isPet())
     {
         auto pet = ToPet();
@@ -19054,7 +19080,7 @@ void Unit::UpdateAuraForGroup()
         {
             auto owner = GetOwner();
             if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-                pet->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_AURAS);
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_AURAS);
         }
     }
 }
@@ -23002,7 +23028,7 @@ void Unit::SetPvP(bool state)
     else
         RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_PVP);
 
-    if (IsPlayer())
+    if (IsPlayer() && ToPlayer()->GetGroup())
         ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
 }
 
@@ -27366,7 +27392,7 @@ void Unit::SetLevel(uint8 lvl)
 {
     SetUInt32Value(UNIT_FIELD_LEVEL, lvl);
 
-    if (IsPlayer())
+    if (IsPlayer() && ToPlayer()->GetGroup())
         ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_LEVEL);
 
     if (IsPlayer())
