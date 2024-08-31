@@ -36,7 +36,7 @@
 #include "WorldPacket.h"
 
 Pet::Pet(Player* owner, PetType type) : Guardian(nullptr, owner, true),
-m_removed(false), m_duration(0), m_specialization(0), m_groupUpdateMask(0), m_declinedname(nullptr)
+m_removed(false), m_duration(0), m_specialization(0), m_declinedname(nullptr)
 {
     m_slot = PET_SLOT_UNK_SLOT;
     m_owner = static_cast<Unit*>(owner);
