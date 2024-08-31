@@ -154,9 +154,6 @@ namespace WorldPackets
             int32 ModelId = 0;
             int32 CurrentHealth = 0;
             int32 MaxHealth = 0;
-            uint8 PowerType = 0;
-            uint16 CurrentPower = 0;
-            uint16 MaxPower = 0;
 
             std::vector<GroupAura> AuraList;
         };

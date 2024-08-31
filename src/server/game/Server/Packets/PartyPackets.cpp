@@ -345,15 +345,6 @@ void WorldPackets::Party::PartyMemberStatseUpdate::Initialize(Player* player)
         if (mask & GROUP_UPDATE_FLAG_PET_MAX_HP)
             MemberState.PetStats->MaxHealth = pet->GetMaxHealth();
 
-        if (mask & GROUP_UPDATE_FLAG_PET_POWER_TYPE)
-            MemberState.PetStats->PowerType = pet->getPowerType();
-
-        if (mask & GROUP_UPDATE_FLAG_PET_CUR_POWER)
-            MemberState.PetStats->CurrentPower = pet->GetPower(pet->getPowerType());
-
-        if (mask & GROUP_UPDATE_FLAG_PET_MAX_POWER)
-            MemberState.PetStats->MaxPower = pet->GetMaxPower(pet->getPowerType());
-
         if (mask & GROUP_UPDATE_FLAG_PET_AURAS)
         {
             Unit::VisibleAuraContainer const visibleAuras = pet->GetVisibleAuras();
@@ -848,10 +839,6 @@ void WorldPackets::Party::PartyMemberStats::Initialize(Player* player)
         MemberStats.PetStats->CurrentHealth = pet->GetHealth();
         MemberStats.PetStats->MaxHealth = pet->GetMaxHealth();
 
-        MemberStats.PetStats->PowerType = pet->getPowerType();
-        MemberStats.PetStats->CurrentPower = pet->GetPower(pet->getPowerType());
-        MemberStats.PetStats->MaxPower = pet->GetMaxPower(pet->getPowerType());
-
         Unit::VisibleAuraContainer const visibleAuras = pet->GetVisibleAuras();
         for (AuraApplication const* aurApp : visibleAuras)
         {
@@ -979,10 +966,6 @@ ByteBuffer& operator<<(ByteBuffer& data, WorldPackets::Party::GroupPetStats cons
 
     data << petStats.CurrentHealth;
     data << petStats.MaxHealth;
-
-    data << petStats.PowerType;
-    data << petStats.CurrentPower;
-    data << petStats.MaxPower;
 
     data << petStats.AuraList;
 

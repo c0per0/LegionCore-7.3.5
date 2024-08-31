@@ -11124,15 +11124,6 @@ void Unit::setPowerType(Powers fieldPower)
 
     if (IsPlayer() && ToPlayer()->GetGroup())
         ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POWER_TYPE);
-    else if (Pet* pet = ToCreature()->ToPet())
-    {
-        if (pet->isControlled())
-        {
-            Unit* owner = GetOwner();
-            if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_POWER_TYPE);
-        }
-    }
 
     Powers new_powertype = fieldPower;
     switch (new_powertype)
@@ -17217,15 +17208,6 @@ void Unit::SetPower(Powers power, int32 val, bool send)
         if (player->GetGroup())
             player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_POWER);
     }
-    else if (Pet* pet = ToCreature()->ToPet())
-    {
-        if (pet->isControlled())
-        {
-            Unit* owner = GetOwner();
-            if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_CUR_POWER);
-        }
-    }
 }
 
 void Unit::SetMaxPower(Powers power, int32 val)
@@ -17254,15 +17236,6 @@ void Unit::SetMaxPower(Powers power, int32 val)
 
         if (player->GetGroup())
             player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_MAX_POWER);
-    }
-    else if (Pet* pet = ToCreature()->ToPet())
-    {
-        if (pet->isControlled())
-        {
-            Unit* owner = GetOwner();
-            if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MAX_POWER);
-        }
     }
 }
 

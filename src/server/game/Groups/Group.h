@@ -161,16 +161,12 @@ enum GroupUpdateFlags
     GROUP_UPDATE_FLAG_PET_MODEL_ID              = 0x00040000,       // uint16 (model id)
     GROUP_UPDATE_FLAG_PET_CUR_HP                = 0x00080000,       // uint32 (HP)
     GROUP_UPDATE_FLAG_PET_MAX_HP                = 0x00100000,       // uint32 (max HP)
-    GROUP_UPDATE_FLAG_PET_POWER_TYPE            = 0x00200000,       // uint8 pet power type
-    GROUP_UPDATE_FLAG_PET_CUR_POWER             = 0x00400000,       // uint16 pet cur power
-    GROUP_UPDATE_FLAG_PET_MAX_POWER             = 0x00800000,       // uint16 pet max power
-    GROUP_UPDATE_FLAG_PET_AURAS                 = 0x01000000,       // [see GROUP_UPDATE_FLAG_AURAS]
+    GROUP_UPDATE_FLAG_PET_AURAS                 = 0x00200000,       // [see GROUP_UPDATE_FLAG_AURAS]
 
-    GROUP_UPDATE_FLAG_PHASE                     = 0x02000000,       // int32 (unk), uint32 (phase count), for (count) uint16(phaseId)
+    GROUP_UPDATE_FLAG_PHASE                     = 0x00400000,       // int32 (unk), uint32 (phase count), for (count) uint16(phaseId)
 
     GROUP_UPDATE_PET = GROUP_UPDATE_FLAG_PET_GUID | GROUP_UPDATE_FLAG_PET_NAME |
                        GROUP_UPDATE_FLAG_PET_MODEL_ID | GROUP_UPDATE_FLAG_PET_CUR_HP | GROUP_UPDATE_FLAG_PET_MAX_HP |
-                       GROUP_UPDATE_FLAG_PET_POWER_TYPE | GROUP_UPDATE_FLAG_PET_CUR_POWER | GROUP_UPDATE_FLAG_PET_MAX_POWER |
                        GROUP_UPDATE_FLAG_PET_AURAS,
 
     GROUP_UPDATE_FULL = GROUP_UPDATE_FLAG_OTHER_PARTY   | GROUP_UPDATE_FLAG_STATUS      | GROUP_UPDATE_FLAG_POWER_TYPE |
@@ -180,7 +176,6 @@ enum GroupUpdateFlags
                         GROUP_UPDATE_FLAG_WMO_DOODAD_PLACEMENT_ID    | GROUP_UPDATE_FLAG_POSITION    | GROUP_UPDATE_FLAG_VEHICLE_SEAT |
                         GROUP_UPDATE_FLAG_AURAS         | GROUP_UPDATE_FLAG_PET_GUID | GROUP_UPDATE_FLAG_PET_NAME |
                         GROUP_UPDATE_FLAG_PET_MODEL_ID | GROUP_UPDATE_FLAG_PET_CUR_HP | GROUP_UPDATE_FLAG_PET_MAX_HP |
-                        GROUP_UPDATE_FLAG_PET_POWER_TYPE | GROUP_UPDATE_FLAG_PET_CUR_POWER | GROUP_UPDATE_FLAG_PET_MAX_POWER |
                         GROUP_UPDATE_FLAG_PET_AURAS | GROUP_UPDATE_FLAG_PHASE
 };
 
