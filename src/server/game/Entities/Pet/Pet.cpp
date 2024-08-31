@@ -174,7 +174,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
         owner->SetLastPetEntry(petentry);
 
     if (owner->GetGroup())
-        owner->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
+        owner->SetGroupUpdateFlag(GROUP_UPDATE_PET);
 
     if (petInfo->pet_type == HUNTER_PET)
     {
