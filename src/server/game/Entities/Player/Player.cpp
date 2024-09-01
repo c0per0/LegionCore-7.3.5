@@ -29943,7 +29943,7 @@ void Player::SendUpdateToOutOfRangeGroupMembers()
 void Player::SendTransferAborted(uint32 mapID, TransferAbortReason reason, uint8 arg)
 {
     WorldPackets::Movement::TransferAborted aborted;
-    aborted.TransfertAbort = reason;
+    aborted.TransferAbort = reason;
     aborted.Arg = arg;
     aborted.MapID = mapID;
     SendDirectMessage(aborted.Write());

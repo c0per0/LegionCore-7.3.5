@@ -144,7 +144,7 @@ WorldPacket const* WorldPackets::Party::PartyMemberStats::Write()
     return &_worldPacket;
 }
 
-void WorldPackets::Party::PartyMemberStatseUpdate::Initialize(Player* player)
+void WorldPackets::Party::PartyMemberStatsUpdate::Initialize(Player* player)
 {
     uint32 mask = player->GetGroupUpdateFlag();
 
@@ -469,7 +469,7 @@ ByteBuffer& operator<<(ByteBuffer& data, WorldPackets::Party::PartyMemberState c
     return data;
 }
 
-WorldPacket const* WorldPackets::Party::PartyMemberStatseUpdate::Write()
+WorldPacket const* WorldPackets::Party::PartyMemberStatsUpdate::Write()
 {
     _worldPacket.WriteBit(ForEnemy);
     _worldPacket.WriteBit(FullUpdate);

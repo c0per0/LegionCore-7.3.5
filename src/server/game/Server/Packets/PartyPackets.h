@@ -226,10 +226,10 @@ namespace WorldPackets
             Optional<uint8> PowerType;
         };
 
-        class PartyMemberStatseUpdate final : public ServerPacket
+        class PartyMemberStatsUpdate final : public ServerPacket
         {
         public:
-            PartyMemberStatseUpdate() : ServerPacket(SMSG_PARTY_MEMBER_STATE_UPDATE, 21) { }
+            PartyMemberStatsUpdate() : ServerPacket(SMSG_PARTY_MEMBER_STATE_UPDATE, 21) { }
 
             WorldPacket const* Write() override;
             
