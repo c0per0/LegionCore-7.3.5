@@ -30694,6 +30694,8 @@ float Player::GetReputationPriceDiscount(Creature const* creature) const
     if (!vendor_faction || !vendor_faction->Faction)
         return 1.0f;
 
+    // For goblin return best discount regardless
+
     ReputationRank rank = GetReputationRank(vendor_faction->Faction);
     if (rank <= REP_NEUTRAL)
         return 1.0f;
